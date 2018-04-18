@@ -17,27 +17,25 @@ RUN apt-get update \
         libperl5.20 \
         libssl1.0.0 \
         wget \
-    && wget -O /usr/src/lua.tar.gz http://luajit.org/download/LuaJIT-2.0.4.tar.gz \
+        git
+RUN  wget -O /usr/src/lua.tar.gz http://luajit.org/download/LuaJIT-2.0.4.tar.gz \
     && mkdir -p /usr/src/luajit \
     && tar -xzf /usr/src/lua.tar.gz -C /usr/src/luajit --strip-components=1 \
     && cd /usr/src/luajit \
     && make \
     && make install \
     && rm -f /usr/src/lua.tar.gz \
-    && wget -O /usr/src/ngx_devel_kit.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz \
+    && wget -O /usr/src/ngx_devel_kit.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0.3.0.tar.gz \
     && mkdir /usr/src/ngx_devel_kit \
     && tar -xzf /usr/src/ngx_devel_kit.tar.gz -C /usr/src/ngx_devel_kit --strip-components=1 \
     && rm -rf /usr/src/ngx_devel_kit.tar.gz \
-    && wget https://github.com/openresty/lua-nginx-module/archive/v0.9.16.tar.gz -O /usr/src/lua-nginx-module.tar.gz \
-    && mkdir /usr/src/lua-nginx-module \
-    && tar -xzf /usr/src/lua-nginx-module.tar.gz -C /usr/src/lua-nginx-module --strip-components=1 \
-    && rm -f /usr/src/lua-nginx-module.tar.gz \
+    && git clone https://github.com/openresty/lua-nginx-module /usr/src/lua-nginx-module \
     && mkdir -p /usr/src/nginx \
     && wget -O /usr/src/nginx.tar.gz "http://nginx.org/download/nginx-1.13.2.tar.gz" \
     && tar -xzf /usr/src/nginx.tar.gz -C /usr/src/nginx --strip-components=1 \
     && rm -rf /usr/src/nginx.tar.gz \
     && cd /usr/src/nginx \
-    && ./configure \
+    && LUAJIT_LIB=/usr/local/lib LUAJIT_INC=/usr/local/include/luajit-2.0  ./configure \
         --prefix=/var/lib/nginx \
         --sbin-path=/usr/local/sbin/nginx \
         --modules-path=/usr/local/lib/nginx/modules \
@@ -74,7 +72,7 @@ RUN apt-get update \
     && rm -rf /usr/src/nginx \
     && strip --strip-all /usr/local/sbin/nginx \
     && apt-get purge $buildDeps \
-    && localepurge && apt-get autoremove && apt-get clean && rm -rf /var/lib/apt/lists/* \
+    && apt-get autoremove && apt-get clean && rm -rf /var/lib/apt/lists/* \
     && mkdir -p \
         /var/tmp/nginx/body \
         /var/tmp/nginx/proxy \
