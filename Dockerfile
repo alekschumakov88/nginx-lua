@@ -47,8 +47,8 @@ RUN  wget -O /usr/src/lua.tar.gz http://luajit.org/download/LuaJIT-2.0.4.tar.gz 
         --http-client-body-temp-path=/var/tmp/nginx/body \
         --http-proxy-temp-path=/var/tmp/nginx/proxy \
         --http-fastcgi-temp-path=/var/tmp/nginx/fcgi \
-        --user=wwwbm \
-        --group=wwwbm \
+        --user=www-data \
+        --group=www-data \
         --with-pcre-jit \
         --with-http_dav_module \
         --with-http_ssl_module \
